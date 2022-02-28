@@ -2,13 +2,16 @@ package ru.job4j.todo.store;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.todo.model.Item;
 
+import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class HbmStore implements Store, AutoCloseable {
     private final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
@@ -34,76 +37,71 @@ public class HbmStore implements Store, AutoCloseable {
 
     @Override
     public Item add(Item item) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        session.save(item);
-        session.getTransaction().commit();
-        session.close();
-        return item;
+     return (Item) this.tx(session -> session.save(item));
     }
 
     @Override
     public boolean replace(int id, Item item) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        session.update(item);
-        session.getTransaction().commit();
-        session.close();
-        return true;
+       return this.tx(session -> {
+   session.update(item);
+   return true;
+       });
     }
 
     @Override
     public boolean delete(int id) {
-        Session session = sf.openSession();
-        session.beginTransaction();
         Item item = new Item(null);
         item.setId(id);
-        session.delete(item);
-        session.getTransaction().commit();
-        session.close();
+        this.tx(session -> {
+                    session.delete(item);
+                    return true;
+                }
+        );
         return true;
     }
 
     @Override
     public List<Item> findAll() {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        List<Item> result = session.createQuery("from ru.job4j.todo.model.Item").list();
-        session.getTransaction().commit();
-        session.close();
-        return result;
+        return this.tx(session -> {
+            final Query query = session.createQuery("from ru.job4j.todo.model.Item");
+            return query.getResultList();
+        });
     }
 
     @Override
     public List<Item> findNotFinal() {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        List<Item> result = new ArrayList<>();
-        List<Item> list = session.createQuery("from ru.job4j.todo.model.Item").list();
-        for (Item item: list) {
-            if (!item.isDone()) {
-                result.add(item);
+        return this.tx(session -> {
+            final Query query = session.createQuery("from ru.job4j.todo.model.Item");
+            List<Item> result = new ArrayList<>();
+            for (Item item: (List<Item>) query.getResultList()) {
+                if (!item.isDone()) {
+                    result.add(item);
+                }
             }
-        }
-        session.getTransaction().commit();
-        session.close();
-        return result;
+            return result;
+        });
     }
 
     @Override
     public List<Item> findByDescr(String descr) {
-        Session session = sf.openSession();
-        List result = new ArrayList();
-        session.beginTransaction();
-        List<Item> list = session.createQuery("from ru.job4j.todo.model.Item")
-                .list();
-        for (Item item: list) {
-            if (item.getDescription().equals(descr)) {
-                result.add(item);
+        return this.tx(session -> {
+            final Query query = session.createQuery("from ru.job4j.todo.model.Item");
+            List<Item> result = new ArrayList<>();
+            for (Item item: (List<Item>) query.getResultList()) {
+                if (item.getDescription().equals(descr)) {
+                    result.add(item);
+                }
             }
-        }
-        session.getTransaction().commit();
-        session.close();
-        return result;
+            return result;
+    });
+    }
+
+    private <T> T tx(final Function<Session, T> command) {
+        final Session session = sf.openSession();
+        final Transaction tx = session.beginTransaction();
+            T rsl = command.apply(session);
+            tx.commit();
+            session.close();
+            return rsl;
     }
 }
