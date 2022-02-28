@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TODOlist</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+</head>
+<body>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" ></script>
+<script>
+    function proverka() {
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:8080/todo/tasks",
+                data: {'finalized'  : $('#checkTask').prop('checked')
+                },
+                dataType: "json",
+                success: function (data) {
+                    $('#table tbody tr').remove()
+                    checkTask(data);
+                }
+            })
+    }
+
+    function checkin(elem) {
+        var status = elem.target.value
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:8080/todo/putitem',
+            data: {
+                'descrip': status
+            },
+            success: function () {
+            proverka()
+            }
+        })
+    }
+
+    function addRow() {
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:8080/todo/tasks',
+            data: {
+                'descrip': $('#descr').val()
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#table tbody tr').remove()
+                checkTask(data);
+            }
+        })
+    }
+
+    function checkTask(data) {
+        for (let i = 0; i < data.length; i++) {
+                var elem = data[i]['description'];
+                $tr = document.createElement('tr')
+                $td1 = document.createElement('td')
+            $td1.innerHTML = parseInt(i+1)
+            $td2 = document.createElement('td')
+            $td2.innerHTML = data[i]['description']
+            $td3 = document.createElement('td')
+            $td3.innerHTML = data[i]['created']
+            $tr.appendChild($td1)
+            $tr.appendChild($td2)
+            $tr.appendChild($td3)
+            $td4 = document.createElement('td')
+            $newCheckBox = document.createElement('input')
+            $newDiv = document.createElement('div')
+            $newDiv.className = "form-check"
+            $newlabel = document.createElement('label')
+            $newlabel.className = "form-check-label"
+            $newlabel.htmlFor = "defaultCheck1"
+            $newCheckBox.id = "checkBox";
+            $newCheckBox.type = "checkBox";
+            $newCheckBox.value = data[i]['description']
+            $newCheckBox.className = "form-check-input";
+                if (data[i]['done'] === true) {
+                    $newCheckBox.checked = true;
+                    $newlabel.innerText = "Выполнено"
+                } else {
+                    $newCheckBox.checked = false;
+                    $newlabel.innerText = "Не выполнено"
+                }
+            $newCheckBox.addEventListener("change", checkin, true)
+                $newDiv.appendChild($newCheckBox)
+            $newDiv.appendChild($newlabel)
+                $td4.appendChild($newDiv)
+            $tr.appendChild($td4)
+            $('#table tbody').append($tr);
+            }
+    }
+
+    $(document).ready(function () {
+        {
+       proverka();
+        }
+    })
+</script>
+
+<div class="container-fluid">
+<form>
+    <div class="row">
+        <div class="card" style="width: 100%">
+            <div class="card-header">
+             Новое задание
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="form-group">
+                        <label>Описание</label>
+                        <input type="text" class="form-control" name="description" id="descr" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" onclick="addRow()">Добавить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <table class="table" id = "table">
+        <thead>
+        <div class="card-header">
+            Список заданий
+        </div>
+        <div id = "proverka">
+           <div className="form-check">
+            <input className="form-check-input" type="checkbox" value="" id="checkTask" onclick="proverka()" checked>'
+            <label className="form-check-label" htmlFor="checkTask">Показывать завершенные задания</label> </div>
+        </div>
+        <tr>
+            <th scope="col">Номер</th>
+            <th scope="col">Описание</th>
+            <th scope="col">Дата</th>
+            <th scope="col">Статус</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</form>
+</div>
+</body>
+</html>
