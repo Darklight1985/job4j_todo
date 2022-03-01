@@ -16,24 +16,6 @@ import java.util.List;
 public class PutServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        Collection<Item> list;
-        if (req.getParameter("finalized").equals("true")) {
-            list = HbmStore.instOf().findAll();
-        } else {
-            list = HbmStore.instOf().findNotFinal();
-        }
-        PrintWriter out = resp.getWriter();
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonString = objectMapper.writeValueAsString(list);
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
-        out.print(jsonString);
-        out.flush();
-    }
-
-    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String descr = req.getParameter("descrip");
