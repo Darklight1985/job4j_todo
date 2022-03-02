@@ -71,13 +71,9 @@ public class HbmStore implements Store, AutoCloseable {
     @Override
     public List<Item> findNotFinal() {
         return this.tx(session -> {
-            final Query query = session.createQuery("from ru.job4j.todo.model.Item");
-            List<Item> result = new ArrayList<>();
-            for (Item item: (List<Item>) query.getResultList()) {
-                if (!item.isDone()) {
-                    result.add(item);
-                }
-            }
+            final Query query = session.createQuery("from Item where done = :value");
+            query.setParameter("value", false);
+            List<Item> result = (List<Item>) query.getResultList();
             return result;
         });
     }
@@ -85,13 +81,9 @@ public class HbmStore implements Store, AutoCloseable {
     @Override
     public List<Item> findByDescr(String descr) {
         return this.tx(session -> {
-            final Query query = session.createQuery("from ru.job4j.todo.model.Item");
-            List<Item> result = new ArrayList<>();
-            for (Item item: (List<Item>) query.getResultList()) {
-                if (item.getDescription().equals(descr)) {
-                    result.add(item);
-                }
-            }
+            final Query query = session.createQuery("from Item where description = :value");
+            query.setParameter("value", descr);
+            List<Item> result = (List<Item>) query.getResultList();
             return result;
     });
     }
