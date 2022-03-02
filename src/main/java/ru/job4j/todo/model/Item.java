@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.Objects;
 
@@ -21,6 +20,10 @@ public class Item {
     private Timestamp created;
     private boolean done;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public Item(int id, String description, boolean done) {
         Date date = new Date();
         this.id = id;
@@ -36,13 +39,22 @@ public class Item {
         this.done = done;
     }
 
-    public Item(String description) {
+    public Item(String description, User user) {
         this.created = new Timestamp(System.currentTimeMillis());
         this.description = description;
         this.done = false;
+        this.user = user;
     }
 
     public Item() {
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public int getId() {

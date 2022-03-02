@@ -2,12 +2,14 @@ package ru.job4j.todo.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.job4j.todo.model.Item;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.store.HbmStore;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
@@ -36,7 +38,8 @@ public class ItemServlet extends HttpServlet {
             throws ServletException, IOException {
         String descr = req.getParameter("descrip");
         System.out.println(descr);
-       HbmStore.instOf().add(new Item(descr));
+        User user = (User) req.getSession().getAttribute("user");
+        HbmStore.instOf().add(new Item(descr, user));
        resp.sendRedirect(req.getContextPath() + "/tasks");
     }
 }

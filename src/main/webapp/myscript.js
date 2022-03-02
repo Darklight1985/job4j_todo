@@ -43,53 +43,57 @@
 }
 
     function checkTask(data) {
-    for (let i = 0; i < data.length; i++) {
-    $tr = document.createElement('tr')
+        for (let i = 0; i < data.length; i++) {
+            $tr = document.createElement('tr')
 
-    $td1 = document.createElement('td')
-    $td1.innerHTML = parseInt(i+1)
+            $td1 = document.createElement('td')
+            $td1.innerHTML = parseInt(i + 1)
 
-    $td2 = document.createElement('td')
-    $td2.innerHTML = data[i]['description']
+            $td2 = document.createElement('td')
+            $td2.innerHTML = data[i]['description']
 
-    $td3 = document.createElement('td')
-    $td3.innerHTML = data[i]['created']
+            $td3 = document.createElement('td')
+            $td3.innerHTML = data[i]['created']
 
-    $tr.appendChild($td1)
-    $tr.appendChild($td2)
-    $tr.appendChild($td3)
+            $td5 = document.createElement('td')
+            $td5.innerHTML = data[i]['user'].name
 
-    $td4 = document.createElement('td')
+            $tr.appendChild($td1)
+            $tr.appendChild($td2)
+            $tr.appendChild($td3)
+            $tr.appendChild($td5)
 
-    $newDiv = document.createElement('div')
-    $newDiv.className = "form-check"
+            $td4 = document.createElement('td')
 
-    $newlabel = document.createElement('label')
-    $newlabel.className = "form-check-label"
-    $newlabel.htmlFor = "defaultCheck1"
+            $newDiv = document.createElement('div')
+            $newDiv.className = "form-check"
 
-        $newCheckBox = document.createElement('input')
-    $newCheckBox.id = "checkBox";
-    $newCheckBox.type = "checkBox";
-    $newCheckBox.value = data[i]['description']
-    $newCheckBox.className = "form-check-input";
-    if (data[i]['done'] === true) {
-    $newCheckBox.checked = true;
-    $newlabel.innerText = "Выполнено"
-} else {
-    $newCheckBox.checked = false;
-    $newlabel.innerText = "Не выполнено"
-}
-    $newCheckBox.addEventListener("change", pass, true)
+            $newlabel = document.createElement('label')
+            $newlabel.className = "form-check-label"
+            $newlabel.htmlFor = "defaultCheck1"
 
-    $newDiv.appendChild($newCheckBox)
-    $newDiv.appendChild($newlabel)
+            $newCheckBox = document.createElement('input')
+            $newCheckBox.id = "checkBox";
+            $newCheckBox.type = "checkBox";
+            $newCheckBox.value = data[i]['description']
+            $newCheckBox.className = "form-check-input";
+            if (data[i]['done'] === true) {
+                $newCheckBox.checked = true;
+                $newlabel.innerText = "Выполнено"
+            } else {
+                $newCheckBox.checked = false;
+                $newlabel.innerText = "Не выполнено"
+            }
+            $newCheckBox.addEventListener("change", pass, true)
 
-    $td4.appendChild($newDiv)
+            $newDiv.appendChild($newCheckBox)
+            $newDiv.appendChild($newlabel)
 
-    $tr.appendChild($td4)
+            $td4.appendChild($newDiv)
 
-    $('#table tbody').append($tr);
-}
-}
+            $tr.appendChild($td4)
+
+            $('#table tbody').append($tr);
+        }
+    }
 

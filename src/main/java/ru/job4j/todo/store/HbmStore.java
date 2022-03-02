@@ -7,9 +7,9 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.todo.model.Item;
+import ru.job4j.todo.model.User;
 
 import javax.persistence.Query;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -41,6 +41,11 @@ public class HbmStore implements Store, AutoCloseable {
     }
 
     @Override
+    public User addUser(User user) {
+        return (User) this.tx(session -> session.save(user));
+    }
+
+    @Override
     public boolean replace(int id, Item item) {
        return this.tx(session -> {
    session.update(item);
@@ -50,7 +55,7 @@ public class HbmStore implements Store, AutoCloseable {
 
     @Override
     public boolean delete(int id) {
-        Item item = new Item(null);
+        Item item = new Item();
         item.setId(id);
         this.tx(session -> {
                     session.delete(item);
@@ -61,9 +66,18 @@ public class HbmStore implements Store, AutoCloseable {
     }
 
     @Override
+    public List<User> findUser(String nameUser) {
+        return  this.tx(session -> {
+            final Query query = session.createQuery("from User where name = :value");
+            query.setParameter("value", nameUser);
+            return query.getResultList();
+        });
+    }
+
+    @Override
     public List<Item> findAll() {
         return this.tx(session -> {
-            final Query query = session.createQuery("from ru.job4j.todo.model.Item");
+            final Query query = session.createQuery("from " + Item.class.getName(), Item.class);
             return query.getResultList();
         });
     }
