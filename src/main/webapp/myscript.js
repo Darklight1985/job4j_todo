@@ -1,5 +1,5 @@
 
-    function proverka() {
+    function check() {
     $.ajax({
         type: "GET",
         url: "http://localhost:8080/todo/tasks",
@@ -13,7 +13,7 @@
     })
 }
 
-    function checkin(elem) {
+    function pass(elem) {
     var status = elem.target.value
     $.ajax({
     type: 'POST',
@@ -22,7 +22,7 @@
     'descrip': status
 },
     success: function () {
-    proverka()
+    check()
 }
 })
 }
@@ -45,22 +45,30 @@
     function checkTask(data) {
     for (let i = 0; i < data.length; i++) {
     $tr = document.createElement('tr')
+
     $td1 = document.createElement('td')
     $td1.innerHTML = parseInt(i+1)
+
     $td2 = document.createElement('td')
     $td2.innerHTML = data[i]['description']
+
     $td3 = document.createElement('td')
     $td3.innerHTML = data[i]['created']
+
     $tr.appendChild($td1)
     $tr.appendChild($td2)
     $tr.appendChild($td3)
+
     $td4 = document.createElement('td')
-    $newCheckBox = document.createElement('input')
+
     $newDiv = document.createElement('div')
     $newDiv.className = "form-check"
+
     $newlabel = document.createElement('label')
     $newlabel.className = "form-check-label"
     $newlabel.htmlFor = "defaultCheck1"
+
+        $newCheckBox = document.createElement('input')
     $newCheckBox.id = "checkBox";
     $newCheckBox.type = "checkBox";
     $newCheckBox.value = data[i]['description']
@@ -72,11 +80,15 @@
     $newCheckBox.checked = false;
     $newlabel.innerText = "Не выполнено"
 }
-    $newCheckBox.addEventListener("change", checkin, true)
+    $newCheckBox.addEventListener("change", pass, true)
+
     $newDiv.appendChild($newCheckBox)
     $newDiv.appendChild($newlabel)
+
     $td4.appendChild($newDiv)
+
     $tr.appendChild($td4)
+
     $('#table tbody').append($tr);
 }
 }
