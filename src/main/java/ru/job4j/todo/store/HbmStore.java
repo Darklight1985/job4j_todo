@@ -1,5 +1,6 @@
 package ru.job4j.todo.store;
 
+import  org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -9,7 +10,6 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.todo.model.Item;
 import ru.job4j.todo.model.User;
 
-import javax.persistence.Query;
 import java.util.List;
 import java.util.function.Function;
 
@@ -66,11 +66,11 @@ public class HbmStore implements Store, AutoCloseable {
     }
 
     @Override
-    public List<User> findUser(String nameUser) {
-        return  this.tx(session -> {
+    public User findUser(String nameUser) {
+        return (User) this.tx(session -> {
             final Query query = session.createQuery("from User where name = :value");
             query.setParameter("value", nameUser);
-            return query.getResultList();
+            return query.uniqueResult();
         });
     }
 

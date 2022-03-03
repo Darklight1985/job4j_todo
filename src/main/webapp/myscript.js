@@ -7,7 +7,13 @@
         },
         dataType: "json",
         success: function (data) {
-            $('#table tbody tr').remove()
+            var sessionValue= sessionStorage['attributes'].user.name;
+            $('#table tbody tr').remove();
+            $input = document.createElement('input');
+            $input.readOnly;
+            $input.type = "text";
+            $input.value = sessionValue;
+            $('#sessionUser').append($input);
             checkTask(data);
         }
     })

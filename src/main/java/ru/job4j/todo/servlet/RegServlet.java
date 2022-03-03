@@ -18,7 +18,7 @@ public class RegServlet extends HttpServlet {
             throws ServletException, IOException {
         String password = req.getParameter("password");
         String name = req.getParameter("name");
-        if (nonNull(HbmStore.instOf().findUser(name).size() != 0)) {
+        if (nonNull(HbmStore.instOf().findUser(name))) {
             req.setAttribute("error", "Пользователь с данным паролем уже зарегистрирован");
             req.getRequestDispatcher("reg.jsp").forward(req, resp);
         }

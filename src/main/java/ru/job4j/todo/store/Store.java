@@ -14,7 +14,7 @@ public interface Store {
 
     boolean delete(int id);
 
-    public List<User> findUser(String name);
+    public User findUser(String name);
 
     List<Item> findAll();
 

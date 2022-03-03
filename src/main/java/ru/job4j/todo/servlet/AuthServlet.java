@@ -18,7 +18,7 @@ public class AuthServlet extends HttpServlet {
             throws ServletException, IOException {
         String name = req.getParameter("name");
         String password = req.getParameter("password");
-        User user = HbmStore.instOf().findUser(name).get(0);
+        User user = HbmStore.instOf().findUser(name);
             if (nonNull(user) && user.getPassword().equals(password)) {
                 HttpSession sc = req.getSession();
                 sc.setAttribute("user", user);
