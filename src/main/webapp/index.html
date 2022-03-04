@@ -33,22 +33,26 @@
 
 <div class="container-fluid">
 <form>
-    <div class="row">
-        <div id="sessionUser">
-                    <a class="nav-link" href="/todo/login.jsp" >Выйти</a>
-            </div>
-        <div class="card" style="width: 100%">
-            <div class="card-header">
-             Новое задание
+    <div class="card text-center">
+            <div class="card-header" align="left">
+                <div class="nav-item" id="userrow">
+                </div>
+                <div class="nav-item" id="sessionUser">
+                    <a class="nav-link" href="/todo/login.jsp" > Выйти</a>
+                </div>
             </div>
             <div class="card-body">
-                <form>
+                <div class="card" style="width: 50%">
+                <div class="nav-item">
+                   <h5> Новое задание </h5>
+                </div>
+                <forma>
                     <div class="form-group">
                         <label>Описание</label>
-                        <input type="text" class="form-control" name="description" id="descr" required>
+                        <input type="text" class="form-control" name="description" id="descr" style="width: 95%" required>
+                        <button type="submit" class="btn btn-primary" onclick="addRow()" style="width: 50%">Добавить</button>
                     </div>
-                    <button type="submit" class="btn btn-primary" onclick="addRow()">Добавить</button>
-                </form>
+                </forma>
             </div>
         </div>
     </div>

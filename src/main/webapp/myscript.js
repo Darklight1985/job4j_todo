@@ -7,17 +7,29 @@
         },
         dataType: "json",
         success: function (data) {
-            var sessionValue= sessionStorage['attributes'].user.name;
             $('#table tbody tr').remove();
             $input = document.createElement('input');
             $input.readOnly;
             $input.type = "text";
-            $input.value = sessionValue;
-            $('#sessionUser').append($input);
             checkTask(data);
+            getUser();
         }
     })
 }
+
+        function getUser() {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/todo/auth.do",
+            dataType: "json",
+            success: function (data) {
+                $('#userrow a').remove();
+                $p = document.createElement('a')
+                $p.textContent = "Пользователь: " + data['name']
+                $('#userrow').append($p);
+            }
+        })
+    }
 
     function pass(elem) {
     var status = elem.target.value

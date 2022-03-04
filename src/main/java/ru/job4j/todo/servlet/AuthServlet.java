@@ -1,5 +1,7 @@
 package ru.job4j.todo.servlet;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import ru.job4j.todo.model.Item;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.store.HbmStore;
 
@@ -9,10 +11,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Collection;
 
 import static java.util.Objects.nonNull;
 
 public class AuthServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+         User user = (User) req.getSession().getAttribute("user");
+        PrintWriter out = resp.getWriter();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(user);
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        out.print(jsonString);
+        out.flush();
+    }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
