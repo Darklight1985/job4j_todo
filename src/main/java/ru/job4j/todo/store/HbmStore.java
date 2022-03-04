@@ -7,9 +7,11 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Item;
 import ru.job4j.todo.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -36,8 +38,14 @@ public class HbmStore implements Store, AutoCloseable {
     }
 
     @Override
-    public Item add(Item item) {
-     return (Item) this.tx(session -> session.save(item));
+    public Item add(Item item, String[] ids) {
+     return this.tx(session -> {
+     for (String id: ids) {
+         item.addCategory(session.find(Category.class, Integer.parseInt(id)));
+     }
+     session.save(item);
+     return item;
+     });
     }
 
     @Override
@@ -100,6 +108,13 @@ public class HbmStore implements Store, AutoCloseable {
             List<Item> result = (List<Item>) query.getResultList();
             return result;
     });
+    }
+
+    public List<Category> allCategory() {
+        List<Category> result = new ArrayList<>();
+        return this.tx(session -> {
+            return session.createQuery("select c from Category c", Category.class).list();
+        });
     }
 
     private <T> T tx(final Function<Session, T> command) {

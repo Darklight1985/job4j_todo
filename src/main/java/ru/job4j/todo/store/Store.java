@@ -1,12 +1,13 @@
 package ru.job4j.todo.store;
 
+import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Item;
 import ru.job4j.todo.model.User;
 
 import java.util.List;
 
 public interface Store {
-    Item add(Item item);
+    Item add(Item item, String[] ids);
 
     public User addUser(User user);
 
@@ -19,6 +20,8 @@ public interface Store {
     List<Item> findAll();
 
     List<Item> findNotFinal();
+
+    public List<Category> allCategory();
 
     public List<Item> findByDescr(String descr);
 }

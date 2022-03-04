@@ -13,7 +13,7 @@
 <body>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+<script src="https://code.jquery.com/jquery-3.5.0.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
@@ -46,13 +46,20 @@
                 <div class="nav-item">
                    <h5> Новое задание </h5>
                 </div>
-                <forma>
-                    <div class="form-group">
+                <form>
+                    <div class="form-group" align="center">
                         <label>Описание</label>
                         <input type="text" class="form-control" name="description" id="descr" style="width: 95%" required>
-                        <button type="submit" class="btn btn-primary" onclick="addRow()" style="width: 50%">Добавить</button>
+                        <button type="submit" class="btn btn-primary" onclick="addRow()" style="width: 50%">Добавить </button>
                     </div>
-                </forma>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-3" for="selCategory" style="font-weight: 900">Тип задания</label>
+                        <div class="col-sm-5" id="selectIds">
+                            <select class="form-control" name="cIds" id="selCategory" multiple="multiple" required>
+                            </select>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

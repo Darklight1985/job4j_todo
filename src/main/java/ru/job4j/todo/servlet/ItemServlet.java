@@ -37,9 +37,9 @@ public class ItemServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String descr = req.getParameter("descrip");
-        System.out.println(descr);
+        String[] cIds = req.getParameterValues("selCat[]");
         User user = (User) req.getSession().getAttribute("user");
-        HbmStore.instOf().add(new Item(descr, user));
+        HbmStore.instOf().add(new Item(descr, user), cIds);
        resp.sendRedirect(req.getContextPath() + "/tasks");
     }
 }

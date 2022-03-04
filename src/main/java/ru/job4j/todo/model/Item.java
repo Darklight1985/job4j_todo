@@ -5,7 +5,9 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tasks")
@@ -23,6 +25,9 @@ public class Item {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<Category> categories = new HashSet<>();
 
     public Item(int id, String description, boolean done) {
         Date date = new Date();
@@ -47,6 +52,10 @@ public class Item {
     }
 
     public Item() {
+    }
+
+    public void addCategory(Category category) {
+        this.categories.add(category);
     }
 
     public User getUser() {

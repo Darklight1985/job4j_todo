@@ -13,9 +13,27 @@
             $input.type = "text";
             checkTask(data);
             getUser();
+            getCategory();
         }
     })
 }
+
+    function getCategory() {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/todo/category.do",
+            dataType: "json",
+            success: function (data) {
+                $('#selCategory option').remove();
+                for (let i = 0; i < data.length; i++) {
+                    $option = document.createElement('option')
+                    $option.value = data[i]['id']
+                    $option.innerHTML = data[i]['name']
+                    $('#selCategory').append($option);
+                }
+            }
+        })
+    }
 
         function getUser() {
         $.ajax({
@@ -50,6 +68,7 @@
         type: 'POST',
         url: 'http://localhost:8080/todo/tasks',
         data: {
+            'selCat': $('#selCategory').val(),
             'descrip': $('#descr').val()
         },
         dataType: 'json',
