@@ -12,8 +12,6 @@
             $input.readOnly;
             $input.type = "text";
             checkTask(data);
-            getUser();
-            getCategory();
         }
     })
 }
@@ -132,5 +130,7 @@
 
             $('#table tbody').append($tr);
         }
+        getUser();
+        getCategory();
     }
 
