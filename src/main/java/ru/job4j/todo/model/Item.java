@@ -19,7 +19,8 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String description;
-    private Timestamp created;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
     private boolean done;
 
     @ManyToOne
@@ -33,19 +34,19 @@ public class Item {
         Date date = new Date();
         this.id = id;
         this.description = description;
-        this.created = new Timestamp(date.getTime());
+        this.created = new Date(System.currentTimeMillis());
         this.done = done;
     }
 
     public Item(int id, String description, LocalDateTime created, boolean done) {
         this.id = id;
         this.description = description;
-        this.created = Timestamp.valueOf(created);
+        this.created = new Date(System.currentTimeMillis());
         this.done = done;
     }
 
     public Item(String description, User user) {
-        this.created = new Timestamp(System.currentTimeMillis());
+        this.created = new Date(System.currentTimeMillis());
         this.description = description;
         this.done = false;
         this.user = user;
@@ -83,7 +84,7 @@ public class Item {
     }
 
     public String getCreated() {
-        return created.toLocalDateTime().format(FORMATTER);
+        return created.toString();
     }
 
     public
